@@ -1,11 +1,10 @@
 services:
   - type: web
     name: cyberify-backend
-    env: docker
+    env: python
     region: ohio
     plan: free
-    dockerContext: backend
-    dockerfilePath: ./backend/Dockerfile
+    rootDir: backend
     buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
     startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
     envVars:
@@ -30,11 +29,11 @@ services:
 
   - type: worker
     name: cyberify-celery
-    env: docker
+    env: python
     region: ohio
     plan: free
-    dockerContext: backend
-    dockerfilePath: ./backend/Dockerfile
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
     startCommand: celery -A config worker -l info
     envVars:
       - key: DATABASE_URL
