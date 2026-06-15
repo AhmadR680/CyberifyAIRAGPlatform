@@ -1,0 +1,49 @@
+name: cyberify-platform
+region: nyc
+services:
+  - name: cyberify-api
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: AhmadR680/CyberifyAIRAGPlatform
+    source_dir: backend
+    environment_slug: python
+    build_command: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate
+    run_command: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+    envs:
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        value: ${cyberify-db.DATABASE_URL}
+      - key: CELERY_BROKER_URL
+        scope: RUN_TIME
+        value: ${cyberify-redis.REDIS_URL}
+      - key: CELERY_RESULT_BACKEND
+        scope: RUN_TIME
+        value: ${cyberify-redis.REDIS_URL}
+
+workers:
+  - name: cyberify-celery
+    github:
+      branch: main
+      deploy_on_push: true
+      repo: AhmadR680/CyberifyAIRAGPlatform
+    source_dir: backend
+    environment_slug: python
+    build_command: pip install -r requirements.txt
+    run_command: celery -A config worker -l info
+    envs:
+      - key: DATABASE_URL
+        scope: RUN_TIME
+        value: ${cyberify-db.DATABASE_URL}
+      - key: CELERY_BROKER_URL
+        scope: RUN_TIME
+        value: ${cyberify-redis.REDIS_URL}
+
+databases:
+  - name: cyberify-db
+    engine: PG
+    version: "15"
+
+  - name: cyberify-redis
+    engine: REDIS
+    version: "7"
