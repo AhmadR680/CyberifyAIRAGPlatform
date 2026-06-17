@@ -1,7 +1,6 @@
 import json
 from django.http import StreamingHttpResponse
-from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from django.views import View
 import redis
 from django.conf import settings
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -9,12 +8,9 @@ from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 
 r = redis.Redis.from_url(settings.CELERY_BROKER_URL)
 
-class NotificationStreamView(APIView):
-    # Use AllowAny because we are manually checking the query param token
-    permission_classes = [AllowAny]
-
+class NotificationStreamView(View):
     def get(self, request):
-        token = request.query_params.get("token")
+        token = request.GET.get("token")
         if not token:
             return StreamingHttpResponse("Unauthorized", status=401)
             
