@@ -69,3 +69,4 @@ PyMuPDF
 python-docx
 groq
 google-genai
+django-jazzmin

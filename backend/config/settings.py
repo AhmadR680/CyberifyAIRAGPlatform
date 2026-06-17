@@ -35,6 +35,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 # Application definition
 
 INSTALLED_APPS = [
+    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -214,3 +215,18 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Cyberify AI Admin",
+    "site_header": "Cyberify AI Platform",
+    "site_brand": "Cyberify AI",
+    "welcome_sign": "Welcome to the Cyberify AI Admin",
+    "copyright": "Cyberify AI Platform",
+    "search_model": ["accounts.User", "documents.Document"],
+    "show_ui_builder": False,
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "theme": "flatly",
+    "dark_mode_theme": "darkly",
+}
